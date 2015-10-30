@@ -49,6 +49,10 @@ typedef NS_ENUM(NSInteger,BarStyle) {
     UIImage *_defaultImage;
     UIImage *_changeImage;
     UIImageView *_firstImageView;
+    NSTimer *_timer;
+    CGFloat _defaultX;
+    CGFloat _currentX;
+    CGFloat _endX;
 }
 #pragma mark - doIUIModuleView协议方法（必须）
 //引用Model对象
@@ -86,6 +90,9 @@ typedef NS_ENUM(NSInteger,BarStyle) {
     //自己的代码实现
     NSString * imgPath = [doIOHelper GetLocalFileFullPath:_model.CurrentPage.CurrentApp :newValue];
     _changeImage = [UIImage imageWithContentsOfFile:imgPath];
+    if (self.numberOfCircles == 0) {
+        return;
+    }
     [self stopAnimating];
     [self startAnimating];
 }
@@ -94,6 +101,9 @@ typedef NS_ENUM(NSInteger,BarStyle) {
     //自己的代码实现
     NSString * imgPath = [doIOHelper GetLocalFileFullPath:_model.CurrentPage.CurrentApp :newValue];
     _defaultImage = [UIImage imageWithContentsOfFile:imgPath];
+    if (self.numberOfCircles == 0) {
+        return;
+    }
     [self stopAnimating];
     [self startAnimating];
 }
@@ -102,6 +112,9 @@ typedef NS_ENUM(NSInteger,BarStyle) {
     //自己的代码实现
     NSArray *array  = [newValue componentsSeparatedByString:@","];
     _pointColors = [self getColorsFromArray:array];
+    if (self.numberOfCircles == 0) {
+        return;
+    }
     [self stopAnimating];
     [self startAnimating];
 }
@@ -155,18 +168,41 @@ typedef NS_ENUM(NSInteger,BarStyle) {
     for (NSUInteger i = 0; i < self.numberOfCircles; i++)
     {
         CGFloat x = [self getViewXFormIndex:i];
+        NSLog(@"x==%f",x);
         UIImageView *circle = [self createCircleWithRadius:self.radius positionX:x];
         circle.image = _defaultImage;
         circle.contentMode = UIViewContentModeScaleToFill;
         [self addSubview:circle];
         if (i == 0) {
             UIImageView *firstImage = [self createCircleWithRadius:self.radius positionX:x];
+            _defaultX = firstImage.frame.origin.x;
+            _currentX = _defaultX;
             firstImage.image = _changeImage;
             _firstImageView = firstImage;
-//            [firstImage.layer addAnimation:[self createTranslationAnimationWithDuration:self.duration] forKey:@"translation"];
             [self addSubview:firstImage];
         }
     }
+    [self startTimer];
+}
+- (void) startTimer
+{
+    [self bringSubviewToFront:_firstImageView];
+    _endX = _defaultX + (self.numberOfCircles) * self.radius * 2 + (self.numberOfCircles - 1) * self.internalSpacing;
+    _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(changeImageViewX) userInfo:nil repeats:YES];
+}
+- (void) stopTimer
+{
+    [_timer invalidate];
+    _timer = nil;
+}
+- (void)changeImageViewX
+{
+    _currentX += (self.radius * 2) + self.internalSpacing;
+    if (_currentX >= _endX) {
+        _currentX = _defaultX;
+    }
+    NSLog(@"_currentX%f",_currentX);
+    _firstImageView.frame = CGRectMake(_currentX, _firstImageView.frame.origin.y, _firstImageView.frame.size.width, _firstImageView.frame.size.height);
 }
 - (UIImageView *)createCircleWithRadius:(CGFloat)radius positionX:(CGFloat)x
 {
@@ -176,32 +212,7 @@ typedef NS_ENUM(NSInteger,BarStyle) {
     return circle;
 }
 
-//- (CAKeyframeAnimation *)createTranslationAnimationWithDuration:(CGFloat)duration
-//{
-////    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
-//    CAKeyframeAnimation *animKey = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.x"];
-//    NSMutableArray *valueArray = [NSMutableArray arrayWithCapacity:self.numberOfCircles];
-//    NSMutableArray *timeArray = [NSMutableArray arrayWithCapacity:self.numberOfCircles - 1];
-//    for (int i = 0; i < self.numberOfCircles; i ++) {
-//        CGFloat x = self.radius * i * 2 + self.internalSpacing * i;
-//        NSNumber *num = [NSNumber numberWithFloat:x];
-//        [valueArray addObject:num];
-//    }
-//    for (int i = 0; i < self.numberOfCircles - 1; i ++) {
-//        [timeArray addObject:[NSNumber numberWithFloat:0.5 * i]];
-//    }
-//    timeArray = @[@0,@0.1,@0.2,@0.3,@0.4,@1];
-//    animKey.values = valueArray;
-//    animKey.keyTimes = timeArray;
-//    animKey.delegate = self;
-//    
-//    animKey.autoreverses = YES;
-////    animKey.duration = (self.numberOfCircles- 1) * 0.2;
-//    animKey.removedOnCompletion = NO;
-//    animKey.repeatCount = INFINITY;
-////    anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//    return animKey;
-//}
+
 - (void)addCircles
 {
     for (NSUInteger i = 0; i < self.numberOfCircles; i++)
@@ -242,7 +253,7 @@ typedef NS_ENUM(NSInteger,BarStyle) {
 {
     CGFloat supViewX = self.center.x;
     int half = self.numberOfCircles / 2;
-    if (index <= half) {
+    if (index < half) {
         if (self.numberOfCircles % 2 == 0) {
             return supViewX - ((half - index) * self.radius * 2 + index * self.internalSpacing);
         }
@@ -258,7 +269,7 @@ typedef NS_ENUM(NSInteger,BarStyle) {
         }
         else
         {
-            return supViewX + ((index - half -1) * self.radius * 2 + self.radius + index * self.internalSpacing);
+            return supViewX + ((index - half) * self.radius * 2 - self.radius + index * self.internalSpacing);
         }
     }
 }
@@ -293,9 +304,13 @@ typedef NS_ENUM(NSInteger,BarStyle) {
 {
     if (self.isAnimating)
     {
-        [self removeCircles];
         self.hidden = YES;
         self.isAnimating = NO;
+        [self removeCircles];
+        if (_style == Normal)
+        {
+            [self stopTimer];
+        }
     }
 }
 //移除添加的view
