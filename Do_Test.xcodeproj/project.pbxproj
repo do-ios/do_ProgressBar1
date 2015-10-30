@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3BD1D0F01BE1BD9200832884 /* do_ProgressBar1_UIModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD1D0ED1BE1BD9200832884 /* do_ProgressBar1_UIModel.m */; settings = {ASSET_TAGS = (); }; };
+		3BD1D0F11BE1BD9200832884 /* do_ProgressBar1_UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD1D0EF1BE1BD9200832884 /* do_ProgressBar1_UIView.m */; settings = {ASSET_TAGS = (); }; };
 		A44BC6701AEE005E001580AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC66F1AEE005E001580AA /* main.m */; };
 		A44BC6731AEE005E001580AA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC6721AEE005E001580AA /* AppDelegate.m */; };
 		A44BC6761AEE005E001580AA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC6751AEE005E001580AA /* ViewController.m */; };
@@ -59,6 +61,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3BD1D0EB1BE1BD9200832884 /* do_ProgressBar1_IView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = do_ProgressBar1_IView.h; sourceTree = "<group>"; };
+		3BD1D0EC1BE1BD9200832884 /* do_ProgressBar1_UIModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = do_ProgressBar1_UIModel.h; sourceTree = "<group>"; };
+		3BD1D0ED1BE1BD9200832884 /* do_ProgressBar1_UIModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = do_ProgressBar1_UIModel.m; sourceTree = "<group>"; };
+		3BD1D0EE1BE1BD9200832884 /* do_ProgressBar1_UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = do_ProgressBar1_UIView.h; sourceTree = "<group>"; };
+		3BD1D0EF1BE1BD9200832884 /* do_ProgressBar1_UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = do_ProgressBar1_UIView.m; sourceTree = "<group>"; };
 		A44BC66A1AEE005E001580AA /* Do_Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Do_Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A44BC66E1AEE005E001580AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A44BC66F1AEE005E001580AA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -345,6 +352,11 @@
 		A44BC7B31AEE19CD001580AA /* doExtLib */ = {
 			isa = PBXGroup;
 			children = (
+				3BD1D0EB1BE1BD9200832884 /* do_ProgressBar1_IView.h */,
+				3BD1D0EC1BE1BD9200832884 /* do_ProgressBar1_UIModel.h */,
+				3BD1D0ED1BE1BD9200832884 /* do_ProgressBar1_UIModel.m */,
+				3BD1D0EE1BE1BD9200832884 /* do_ProgressBar1_UIView.h */,
+				3BD1D0EF1BE1BD9200832884 /* do_ProgressBar1_UIView.m */,
 				A4A1A01C1AF0F82B00D835A5 /* do_Test.json */,
 			);
 			path = doExtLib;
@@ -495,6 +507,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BD1D0F11BE1BD9200832884 /* do_ProgressBar1_UIView.m in Sources */,
+				3BD1D0F01BE1BD9200832884 /* do_ProgressBar1_UIModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

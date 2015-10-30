@@ -12,17 +12,55 @@
 #import "doUIModuleHelper.h"
 #import "doScriptEngineHelper.h"
 #import "doIScriptEngine.h"
+#import "doTextHelper.h"
+#import "doIOHelper.h"
+#import "doISourceFS.h"
+#import "doIPage.h"
+
+typedef NS_ENUM(NSInteger,BarStyle) {
+    Normal = 0,
+    Zoom = 1
+};
+@interface do_ProgressBar1_UIView()
+/** The number of circle indicators. */
+@property (assign, nonatomic) int numberOfCircles;
+
+/** The spacing between circles. */
+@property (assign, nonatomic) CGFloat internalSpacing;
+
+/** The radius of each circle. */
+@property (assign, nonatomic) CGFloat radius;
+
+/** The base animation delay of each circle. */
+@property (assign, nonatomic) CGFloat delay;
+
+/** The base animation duration of each circle*/
+@property (assign, nonatomic) CGFloat duration;
+
+@property (assign, nonatomic) BOOL isAnimating;
+
+
+@end
 
 @implementation do_ProgressBar1_UIView
+{
+    BarStyle _style;
+    NSArray *_pointColors;
+    UIImage *_defaultImage;
+    UIImage *_changeImage;
+    UIImageView *_firstImageView;
+}
 #pragma mark - doIUIModuleView协议方法（必须）
 //引用Model对象
 - (void) LoadView: (doUIModule *) _doUIModule
 {
     _model = (typeof(_model)) _doUIModule;
+    [self setupDefaults];
 }
 //销毁所有的全局对象
 - (void) OnDispose
 {
+    [self stopAnimating];
     //自定义的全局属性,view-model(UIModel)类销毁时会递归调用<子view-model(UIModel)>的该方法，将上层的引用切断。所以如果self类有非原生扩展，需主动调用view-model(UIModel)的该方法。(App || Page)-->强引用-->view-model(UIModel)-->强引用-->view
 }
 //实现布局
@@ -46,22 +84,226 @@
 - (void)change_changeImage:(NSString *)newValue
 {
     //自己的代码实现
+    NSString * imgPath = [doIOHelper GetLocalFileFullPath:_model.CurrentPage.CurrentApp :newValue];
+    _changeImage = [UIImage imageWithContentsOfFile:imgPath];
+    [self stopAnimating];
+    [self startAnimating];
 }
 - (void)change_defaultImage:(NSString *)newValue
 {
     //自己的代码实现
+    NSString * imgPath = [doIOHelper GetLocalFileFullPath:_model.CurrentPage.CurrentApp :newValue];
+    _defaultImage = [UIImage imageWithContentsOfFile:imgPath];
+    [self stopAnimating];
+    [self startAnimating];
 }
 - (void)change_pointColors:(NSString *)newValue
 {
     //自己的代码实现
+    NSArray *array  = [newValue componentsSeparatedByString:@","];
+    _pointColors = [self getColorsFromArray:array];
+    [self stopAnimating];
+    [self startAnimating];
 }
 - (void)change_pointNum:(NSString *)newValue
 {
     //自己的代码实现
+    self.numberOfCircles = [[doTextHelper Instance]StrToInt:newValue :0];
+    [self stopAnimating];
+    [self startAnimating];
 }
 - (void)change_style:(NSString *)newValue
 {
     //自己的代码实现
+    if ([newValue isEqualToString:@"zoom"]) {
+        _style = Zoom;
+    }
+    else if([newValue isEqualToString:@"normal"])
+    {
+        _style = Normal;
+    }
+}
+#pragma -mark - 私有方法
+- (void)setupDefaults
+{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    self.numberOfCircles = 0;
+    self.internalSpacing = 1;
+    self.radius = (MIN(_model.RealWidth, _model.RealHeight)) / 2;
+    self.delay = 0.2;
+    self.duration = 0.8;
+}
+- (void)startAnimating
+{
+    if (!self.isAnimating)
+    {
+        if (_style == Zoom) {
+            [self addCircles];
+            self.hidden = NO;
+            self.isAnimating = YES;
+        }
+        else
+        {
+            [self addImageView];
+            self.hidden = NO;
+            self.isAnimating = YES;
+        }
+    }
+}
+- (void)addImageView
+{
+    for (NSUInteger i = 0; i < self.numberOfCircles; i++)
+    {
+        CGFloat x = [self getViewXFormIndex:i];
+        UIImageView *circle = [self createCircleWithRadius:self.radius positionX:x];
+        circle.image = _defaultImage;
+        circle.contentMode = UIViewContentModeScaleToFill;
+        [self addSubview:circle];
+        if (i == 0) {
+            UIImageView *firstImage = [self createCircleWithRadius:self.radius positionX:x];
+            firstImage.image = _changeImage;
+            _firstImageView = firstImage;
+//            [firstImage.layer addAnimation:[self createTranslationAnimationWithDuration:self.duration] forKey:@"translation"];
+            [self addSubview:firstImage];
+        }
+    }
+}
+- (UIImageView *)createCircleWithRadius:(CGFloat)radius positionX:(CGFloat)x
+{
+    UIImageView *circle = [[UIImageView alloc] initWithFrame:CGRectMake(x, 0, radius * 2, radius * 2)];
+    circle.layer.cornerRadius = radius;
+    circle.translatesAutoresizingMaskIntoConstraints = NO;
+    return circle;
+}
+
+//- (CAKeyframeAnimation *)createTranslationAnimationWithDuration:(CGFloat)duration
+//{
+////    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
+//    CAKeyframeAnimation *animKey = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.x"];
+//    NSMutableArray *valueArray = [NSMutableArray arrayWithCapacity:self.numberOfCircles];
+//    NSMutableArray *timeArray = [NSMutableArray arrayWithCapacity:self.numberOfCircles - 1];
+//    for (int i = 0; i < self.numberOfCircles; i ++) {
+//        CGFloat x = self.radius * i * 2 + self.internalSpacing * i;
+//        NSNumber *num = [NSNumber numberWithFloat:x];
+//        [valueArray addObject:num];
+//    }
+//    for (int i = 0; i < self.numberOfCircles - 1; i ++) {
+//        [timeArray addObject:[NSNumber numberWithFloat:0.5 * i]];
+//    }
+//    timeArray = @[@0,@0.1,@0.2,@0.3,@0.4,@1];
+//    animKey.values = valueArray;
+//    animKey.keyTimes = timeArray;
+//    animKey.delegate = self;
+//    
+//    animKey.autoreverses = YES;
+////    animKey.duration = (self.numberOfCircles- 1) * 0.2;
+//    animKey.removedOnCompletion = NO;
+//    animKey.repeatCount = INFINITY;
+////    anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    return animKey;
+//}
+- (void)addCircles
+{
+    for (NSUInteger i = 0; i < self.numberOfCircles; i++)
+    {
+        UIColor *color = [self getColorFromIndex:i];
+        CGFloat x = [self getViewXFormIndex:i];
+        UIView *circle = [self createCircleWithRadius:self.radius
+                                                color:color
+                                            positionX:x];
+        [circle setTransform:CGAffineTransformMakeScale(0, 0)];
+        [circle.layer addAnimation:[self createAnimationWithDuration:self.duration delay:(i * self.delay)] forKey:@"scale"];
+        [self addSubview:circle];
+    }
+}
+//得到颜色数组
+- (NSArray *)getColorsFromArray:(NSArray *)array
+{
+    NSMutableArray *colors = [NSMutableArray array];
+    for (NSString *colorStr in array) {
+        UIColor *color = [doUIModuleHelper GetColorFromString:colorStr :[UIColor clearColor]];
+        [colors addObject:color];
+    }
+    return colors;
+}
+//得到颜色
+- (UIColor *)getColorFromIndex:(NSUInteger)index
+{
+    if (index < _pointColors.count) {
+        return [_pointColors objectAtIndex:index];
+    }
+    else
+    {
+        return [_pointColors lastObject];
+    }
+}
+//得到远点的x
+- (CGFloat )getViewXFormIndex:(NSUInteger )index
+{
+    CGFloat supViewX = self.center.x;
+    int half = self.numberOfCircles / 2;
+    if (index <= half) {
+        if (self.numberOfCircles % 2 == 0) {
+            return supViewX - ((half - index) * self.radius * 2 + index * self.internalSpacing);
+        }
+        else
+        {
+            return supViewX - ((half - index) * self.radius * 2 + self.radius + index * self.internalSpacing);
+        }
+    }
+    else
+    {
+        if (self.numberOfCircles % 2 == 0) {
+            return supViewX + ((index - half) * self.radius * 2 + index * self.internalSpacing);
+        }
+        else
+        {
+            return supViewX + ((index - half -1) * self.radius * 2 + self.radius + index * self.internalSpacing);
+        }
+    }
+}
+//创建远点view
+- (UIView *)createCircleWithRadius:(CGFloat)radius
+                             color:(UIColor *)color
+                         positionX:(CGFloat)x
+{
+    UIView *circle = [[UIView alloc] initWithFrame:CGRectMake(x, 0, radius * 2, radius * 2)];
+    circle.backgroundColor = color;
+    circle.layer.cornerRadius = radius;
+    circle.translatesAutoresizingMaskIntoConstraints = NO;
+    return circle;
+}
+//添加动画
+- (CABasicAnimation *)createAnimationWithDuration:(CGFloat)duration delay:(CGFloat)delay
+{
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    anim.delegate = self;
+    anim.fromValue = [NSNumber numberWithFloat:0.3f];
+    anim.toValue = [NSNumber numberWithFloat:0.8f];
+    anim.autoreverses = YES;
+    anim.duration = duration;
+    anim.removedOnCompletion = NO;
+    anim.beginTime = CACurrentMediaTime()+delay;
+    anim.repeatCount = INFINITY;
+    anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    return anim;
+}
+//结束动画
+- (void)stopAnimating
+{
+    if (self.isAnimating)
+    {
+        [self removeCircles];
+        self.hidden = YES;
+        self.isAnimating = NO;
+    }
+}
+//移除添加的view
+- (void)removeCircles
+{
+    [self.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [obj removeFromSuperview];
+    }];
 }
 
 #pragma mark - doIUIModuleView协议方法（必须）<大部分情况不需修改>
