@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B0C4D541BE73AA100EFFB31 /* doCustomActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B0C4D531BE73AA100EFFB31 /* doCustomActivityView.m */; settings = {ASSET_TAGS = (); }; };
 		3BD1D0F01BE1BD9200832884 /* do_ProgressBar1_UIModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD1D0ED1BE1BD9200832884 /* do_ProgressBar1_UIModel.m */; settings = {ASSET_TAGS = (); }; };
 		3BD1D0F11BE1BD9200832884 /* do_ProgressBar1_UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BD1D0EF1BE1BD9200832884 /* do_ProgressBar1_UIView.m */; settings = {ASSET_TAGS = (); }; };
+		3BF5280B1BE341DA0002858E /* do_ProgressBar1_UIModel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BD1D0EC1BE1BD9200832884 /* do_ProgressBar1_UIModel.h */; };
+		3BF5280C1BE341DA0002858E /* do_ProgressBar1_UIView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BD1D0EE1BE1BD9200832884 /* do_ProgressBar1_UIView.h */; };
 		A44BC6701AEE005E001580AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC66F1AEE005E001580AA /* main.m */; };
 		A44BC6731AEE005E001580AA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC6721AEE005E001580AA /* AppDelegate.m */; };
 		A44BC6761AEE005E001580AA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A44BC6751AEE005E001580AA /* ViewController.m */; };
@@ -55,12 +58,16 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				3BF5280B1BE341DA0002858E /* do_ProgressBar1_UIModel.h in CopyFiles */,
+				3BF5280C1BE341DA0002858E /* do_ProgressBar1_UIView.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3B0C4D521BE73AA100EFFB31 /* doCustomActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = doCustomActivityView.h; sourceTree = "<group>"; };
+		3B0C4D531BE73AA100EFFB31 /* doCustomActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = doCustomActivityView.m; sourceTree = "<group>"; };
 		3BD1D0EB1BE1BD9200832884 /* do_ProgressBar1_IView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = do_ProgressBar1_IView.h; sourceTree = "<group>"; };
 		3BD1D0EC1BE1BD9200832884 /* do_ProgressBar1_UIModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = do_ProgressBar1_UIModel.h; sourceTree = "<group>"; };
 		3BD1D0ED1BE1BD9200832884 /* do_ProgressBar1_UIModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = do_ProgressBar1_UIModel.m; sourceTree = "<group>"; };
@@ -86,7 +93,7 @@
 		A44BC69C1AEE008D001580AA /* doScriptEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = doScriptEngine.m; sourceTree = "<group>"; };
 		A44BC69D1AEE008D001580AA /* doService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = doService.h; sourceTree = "<group>"; };
 		A44BC69E1AEE008D001580AA /* doService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = doService.m; sourceTree = "<group>"; };
-		A44BC7B21AEE19CC001580AA /* libdoExtLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdoExtLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A44BC7B21AEE19CC001580AA /* libdoProgressBar1.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdoProgressBar1.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A1A01C1AF0F82B00D835A5 /* do_Test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = do_Test.json; sourceTree = "<group>"; };
 		CC1195AB1B147F7C00583148 /* doAssetLaunchImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = doAssetLaunchImage.h; path = Header/doAssetLaunchImage.h; sourceTree = "<group>"; };
 		CC1195AC1B147F7C00583148 /* doCallBackTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = doCallBackTask.h; path = Header/doCallBackTask.h; sourceTree = "<group>"; };
@@ -230,7 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				A44BC66A1AEE005E001580AA /* Do_Test.app */,
-				A44BC7B21AEE19CC001580AA /* libdoExtLib.a */,
+				A44BC7B21AEE19CC001580AA /* libdoProgressBar1.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -358,6 +365,8 @@
 				3BD1D0EE1BE1BD9200832884 /* do_ProgressBar1_UIView.h */,
 				3BD1D0EF1BE1BD9200832884 /* do_ProgressBar1_UIView.m */,
 				A4A1A01C1AF0F82B00D835A5 /* do_Test.json */,
+				3B0C4D521BE73AA100EFFB31 /* doCustomActivityView.h */,
+				3B0C4D531BE73AA100EFFB31 /* doCustomActivityView.m */,
 			);
 			path = doExtLib;
 			sourceTree = "<group>";
@@ -432,7 +441,7 @@
 			);
 			name = doExtLib;
 			productName = doExtLib;
-			productReference = A44BC7B21AEE19CC001580AA /* libdoExtLib.a */;
+			productReference = A44BC7B21AEE19CC001580AA /* libdoProgressBar1.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -509,6 +518,7 @@
 			files = (
 				3BD1D0F11BE1BD9200832884 /* do_ProgressBar1_UIView.m in Sources */,
 				3BD1D0F01BE1BD9200832884 /* do_ProgressBar1_UIModel.m in Sources */,
+				3B0C4D541BE73AA100EFFB31 /* doCustomActivityView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,7 +658,7 @@
 					"$(inherited)",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = doProgressBar1;
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
 			};
@@ -658,7 +668,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = doProgressBar1;
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
 			};
