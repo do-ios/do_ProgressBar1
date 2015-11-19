@@ -46,13 +46,13 @@
     
     //重新调整视图的x,y,w,h
     [doUIModuleHelper OnRedraw:_model];
-    _activityView.center = CGPointMake(self.center.x, _model.RealHeight / 2);
+    _activityView.center = CGPointMake(_model.RealWidth / 2, _model.RealHeight / 2);
     _activityView.supWidth = _model.RealWidth;
     CGFloat radius = (MIN(_model.RealWidth, _model.RealHeight)) / 2;
     if (radius != _activityView.radius) {
         _activityView.radius = radius;
         [_activityView onRedrawView];
-        _activityView.center = CGPointMake(self.center.x, _model.RealHeight / 2);
+        _activityView.center = CGPointMake(_model.RealWidth / 2, _model.RealHeight / 2);
     }
 }
 
